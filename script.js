@@ -1,7 +1,7 @@
 const player = (name, mark) => {
     const play = function (array, index) {
         array[index] = mark;
-        gameFlow.checkGameOver(array, index, mark);
+        console.log(gameFlow.checkGameOver(array, index, mark));
         gameFlow.changeCurrentPlayer();
         gameBoard.renderPlays();
     }    
@@ -54,7 +54,7 @@ const gameFlow = (() => {
             // Check for diagonal winner center spot
             if (index === 4) {
                 if(array[4] === array[0] && array[4] === array[8] ||
-                    array[4] === array[2] && array[4] === array[7]) {
+                    array[4] === array[2] && array[4] === array[6]) {
                         return mark
                     }
             }
@@ -158,23 +158,24 @@ const AI = (() => {
         gameFlow.changeCurrentPlayer();
         gameBoard.renderPlays();
     }
-    const minimax = function (array, index, isMaximizing) {
-        let result = gameFlow.checkGameOver(array, index, mark);
+    const minimax = function (array, index, isMaximizing, testMark) {
+        let result = gameFlow.checkGameOver(array, index, testMark);
         let scores = {
             "o": 1,
             "x": -1,
             "tie": 0 
         }
+        console.log(result)
         if (result) {
-            let score = scores[result];
-            return score;
+            return scores[result];
         }
         if (isMaximizing) {
-            let bestScore = -Infinity;
+            let bestScore = -2;
             array.forEach( (item, index, array) => {
                 if (item === " ") {
                     array[index] = mark;
-                    let score = minimax(array, index, false);
+                    let testMark = mark;
+                    let score = minimax(array, index, false, testMark);
                     if (score > bestScore) {
                         bestScore = score;
                     }
@@ -183,11 +184,12 @@ const AI = (() => {
             })
             return bestScore
         } else {
-            let bestScore = Infinity;
+            let bestScore = 2;
             array.forEach( (item, index, array) => {
                 if (item === " ") {
                     array[index] = "x";
-                    let score = minimax(array, index, true);
+                    let testMark = "x";
+                    let score = minimax(array, index, true, testMark);
                     if (score < bestScore) {
                         bestScore = score;
                     }
@@ -203,7 +205,8 @@ const AI = (() => {
         array.forEach( (item, index, array) => {
             if (item === " ") {
                 array[index] = mark;
-                let score = minimax(array, index, false);
+                testMark = mark;
+                let score = minimax(array, index, false, testMark);
                 if (score > bestScore) {
                     bestScore = score;
                     bestMove = index
@@ -225,7 +228,7 @@ const AI = (() => {
 })();
 
 gameFlow.addPlayer(player("fabio", "x"));
-gameFlow.addPlayer(AI);
+gameFlow.addPlayer(AI)
 
 gameBoard.renderBoard();
 
