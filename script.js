@@ -1,7 +1,10 @@
 const player = (name, mark) => {
     const play = function (array, index) {
         array[index] = mark;
-        console.log(gameFlow.checkGameOver(array, index, mark));
+        let winner = gameFlow.checkGameOver(array, index, mark);
+        if (winner) {
+            gameBoard.winnerMessage(winner);
+        }
         gameFlow.changeCurrentPlayer();
         gameBoard.renderPlays();
     }    
@@ -104,12 +107,57 @@ const gameFlow = (() => {
 const gameBoard = (() => {
     const body = document.querySelector("body")
     const board = document.createElement("div")
+    const start = document.createElement("button")
+    const popupContainer = document.createElement("div")
+    const inputContainer = document.createElement("div")
+    const winnerContainer = document.createElement("div")
+    const form = document.createElement("form")
+    const xPlayer = document.createElement("input")
+    const oPlayer = document.createElement("input")
+    const startGame = document.createElement("button")
+
     board.setAttribute("id", "board")
-    body.append(board);
+    start.setAttribute("id", "start")
+    start.innerHTML = "Restart Game"
+    popupContainer.setAttribute("id", "popupContainer")
+    inputContainer.setAttribute("class", "popup")
+    winnerContainer.setAttribute("class", "popup")
+    winnerContainer.setAttribute("id", "hidePopup")
+    form.setAttribute("id", "startGameForm")
+    xPlayer.setAttribute("placeholder", "x Player Name")
+    oPlayer.setAttribute("placeholder", "o Player Name")
+    xPlayer.setAttribute("class", "textArea")
+    oPlayer.setAttribute("class", "textArea")
+    startGame.innerHTML = "Start Game"
+    startGame.setAttribute("id", "startButton")
+    startGame.setAttribute("type", "button")
+    
+    form.append(xPlayer, oPlayer, startGame);
+    inputContainer.append(form);
+    popupContainer.append(inputContainer, winnerContainer);
+    body.append(board, start, popupContainer);
+    
+    startGame.addEventListener("click", () => {
+        popupContainer.id = "hidePopup"
+        inputContainer.id = "hidePopup"
+    })
+    
     let boardArray = [];
     for (let i = 0; i < 9; i++) {
         boardArray.push(" ")
     };
+
+    const winnerMessage = function (mark) {
+        if (mark === "x" || mark === "o") {
+            popupContainer.id = "popupContainer"
+            winnerContainer.removeAttribute("id")
+        } else {
+            popupContainer.id = "popupContainer"
+            winnerContainer.removeAttribute("id")
+            winnerContainer.innerHTML = "It's a tie!"
+        }
+    }
+
     const renderBoard = function () {
         boardArray.forEach( (slot, index) => {
             const spot = document.createElement("div")
@@ -125,6 +173,7 @@ const gameBoard = (() => {
             board.append(spot);
         })
     }
+    
     const renderPlays = function () {
     boardArray.forEach( (slot, index) => {
             const boardNodes = board.childNodes;
@@ -135,6 +184,7 @@ const gameBoard = (() => {
         boardArray,
         renderBoard,
         renderPlays,
+        winnerMessage
     }
 })();
 
@@ -154,7 +204,7 @@ const AI = (() => {
         const AvailableMoves = getAvailableMoves(array)
         const AIplay = AvailableMoves[Math.floor(Math.random() * AvailableMoves.length)];
         array[AIplay] = mark;
-        console.log(gameFlow.checkGameOver(array, index, mark))
+        gameFlow.checkGameOver(array, index, mark);
         gameFlow.changeCurrentPlayer();
         gameBoard.renderPlays();
     }
@@ -165,7 +215,6 @@ const AI = (() => {
             "x": -1,
             "tie": 0 
         }
-        console.log(result)
         if (result) {
             return scores[result];
         }
@@ -173,12 +222,9 @@ const AI = (() => {
             let bestScore = -2;
             array.forEach( (item, index, array) => {
                 if (item === " ") {
-                    array[index] = mark;
-                    let testMark = mark;
-                    let score = minimax(array, index, false, testMark);
-                    if (score > bestScore) {
-                        bestScore = score;
-                    }
+                    array[index] = "o";
+                    let score = minimax(array, index, false, "o");
+                    bestScore = Math.max(score, bestScore);
                     array[index] = " ";
                 }
             })
@@ -188,11 +234,8 @@ const AI = (() => {
             array.forEach( (item, index, array) => {
                 if (item === " ") {
                     array[index] = "x";
-                    let testMark = "x";
-                    let score = minimax(array, index, true, testMark);
-                    if (score < bestScore) {
-                        bestScore = score;
-                    }
+                    let score = minimax(array, index, true, "x");
+                    bestScore = Math.min(score, bestScore)
                     array[index] = " ";
                 }
             })
@@ -200,13 +243,12 @@ const AI = (() => {
         }
     }
     const minimaxPlay = function (array) {
-        let bestScore = -Infinity;
+        let bestScore = -2;
         let bestMove;
         array.forEach( (item, index, array) => {
             if (item === " ") {
-                array[index] = mark;
-                testMark = mark;
-                let score = minimax(array, index, false, testMark);
+                array[index] = "o";
+                let score = minimax(array, index, false, "o");
                 if (score > bestScore) {
                     bestScore = score;
                     bestMove = index
@@ -214,7 +256,7 @@ const AI = (() => {
                 array[index] = " ";
             }
         })
-        array[bestMove] = mark;
+        array[bestMove] = "o";
         gameFlow.changeCurrentPlayer();
         gameBoard.renderPlays();
     }
@@ -227,8 +269,8 @@ const AI = (() => {
     }
 })();
 
-gameFlow.addPlayer(player("fabio", "x"));
-gameFlow.addPlayer(AI)
+gameFlow.addPlayer(player("player1", "o"));
+gameFlow.addPlayer(player("player2", "x"));
 
 gameBoard.renderBoard();
 

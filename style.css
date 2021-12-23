@@ -1,9 +1,115 @@
+* {
+  font-family: "Lato", sans-serif;
+  color: #eeeeee;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #165a81;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 120px;
+  margin: auto;
+  padding: 50px;
+}
+
 #board {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(3, 230px);
+  grid-template-rows: repeat(3, 230px);
+  height: 690px;
+  width: 690px;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 80px;
 }
 
 .spot {
-  width: 200px;
-  height: 200px;
+  border: 5px solid #114d72;
+  width: 100%;
+  height: 100%;
+  font-size: 150px;
+  line-height: 200px;
+  text-align: center;
+}
+
+.spot:nth-child(n + 1):nth-child(-n + 3) {
+  border-top: none;
+}
+
+.spot:nth-child(3n) {
+  border-right: none;
+}
+
+.spot:nth-child(n + 7):nth-child(-n + 9) {
+  border-bottom: none;
+}
+
+.spot:nth-child(3n + 1) {
+  border-left: none;
+}
+
+button {
+  background-color: #114d72;
+  border: none;
+  font-size: 70px;
+  width: 500px;
+  height: 130px;
+  border-radius: 20px;
+  margin: auto;
+}
+
+#popupContainer {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#hidePopup {
+  display: none;
+}
+
+.popup {
+  background: white;
+  width: 500px;
+  height: 500px;
+  border-radius: 20px;
+  color: #114d72;
+  font-size: 80px;
+  text-align: center;
+}
+
+#startGameForm {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.textArea {
+  padding: 15px;
+  border-radius: 10px;
+  color: black;
+  width: 350px;
+  height: 80px;
+  font-size: 36px;
+}
+
+#startButton {
+  margin: 0px;
+  border-radius: 10px;
+  width: 350px;
+  height: 80px;
+  font-size: 36px;
+  cursor: pointer;
 }
