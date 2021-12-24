@@ -13,20 +13,20 @@ body {
 }
 
 h1 {
-  font-size: 120px;
+  font-size: 8px;
   margin: auto;
-  padding: 100px;
+  padding: 90px;
 }
 
 #board {
   display: grid;
-  grid-template-columns: repeat(3, 230px);
-  grid-template-rows: repeat(3, 230px);
-  height: 690px;
-  width: 690px;
+  grid-template-columns: repeat(3, 210px);
+  grid-template-rows: repeat(3, 210px);
+  height: 660px;
+  width: 660px;
   align-items: center;
   margin: auto;
-  margin-bottom: 80px;
+  margin-bottom: 70px;
 }
 
 .spot {
