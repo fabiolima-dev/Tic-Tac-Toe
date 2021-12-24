@@ -15,7 +15,7 @@ body {
 h1 {
   font-size: 120px;
   margin: auto;
-  padding: 50px;
+  padding: 100px;
 }
 
 #board {
@@ -57,11 +57,12 @@ h1 {
 button {
   background-color: #114d72;
   border: none;
-  font-size: 70px;
-  width: 500px;
-  height: 130px;
-  border-radius: 20px;
-  margin: auto;
+  font-size: 36px;
+  width: 350px;
+  height: 80px;
+  border-radius: 10px;
+  margin: 0px;
+  cursor: pointer;
 }
 
 #popupContainer {
@@ -88,7 +89,7 @@ button {
   text-align: center;
 }
 
-#startGameForm {
+.innerPopup {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -105,11 +106,6 @@ button {
   font-size: 36px;
 }
 
-#startButton {
-  margin: 0px;
-  border-radius: 10px;
-  width: 350px;
-  height: 80px;
-  font-size: 36px;
-  cursor: pointer;
+p {
+  color: #114d72;
 }

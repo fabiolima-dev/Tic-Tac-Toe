@@ -97,6 +97,7 @@ const gameFlow = (() => {
         }
     }    
     return {
+        players,
         addPlayer,
         getCurrentPlayer,
         changeCurrentPlayer,
@@ -107,39 +108,50 @@ const gameFlow = (() => {
 const gameBoard = (() => {
     const body = document.querySelector("body")
     const board = document.createElement("div")
-    const start = document.createElement("button")
     const popupContainer = document.createElement("div")
     const inputContainer = document.createElement("div")
     const winnerContainer = document.createElement("div")
+    const innerWinner = document.createElement("div")
+    const winner = document.createElement("p")
+    const restartGame = document.createElement("button")
     const form = document.createElement("form")
     const xPlayer = document.createElement("input")
     const oPlayer = document.createElement("input")
     const startGame = document.createElement("button")
 
     board.setAttribute("id", "board")
-    start.setAttribute("id", "start")
-    start.innerHTML = "Restart Game"
     popupContainer.setAttribute("id", "popupContainer")
     inputContainer.setAttribute("class", "popup")
     winnerContainer.setAttribute("class", "popup")
     winnerContainer.setAttribute("id", "hidePopup")
-    form.setAttribute("id", "startGameForm")
+    innerWinner.setAttribute("class", "innerPopup")
+    restartGame.innerHTML = "Restart Game"
+    form.setAttribute("class", "innerPopup")
     xPlayer.setAttribute("placeholder", "x Player Name")
     oPlayer.setAttribute("placeholder", "o Player Name")
     xPlayer.setAttribute("class", "textArea")
     oPlayer.setAttribute("class", "textArea")
     startGame.innerHTML = "Start Game"
-    startGame.setAttribute("id", "startButton")
     startGame.setAttribute("type", "button")
     
     form.append(xPlayer, oPlayer, startGame);
     inputContainer.append(form);
+    winnerContainer.append(innerWinner);
+    innerWinner.append(winner, restartGame);
     popupContainer.append(inputContainer, winnerContainer);
-    body.append(board, start, popupContainer);
+    body.append(board, popupContainer);
     
     startGame.addEventListener("click", () => {
         popupContainer.id = "hidePopup"
         inputContainer.id = "hidePopup"
+        const x = player(xPlayer.value, "x")
+        const o = player(oPlayer.value, "o")
+        gameFlow.addPlayer(x);
+        gameFlow.addPlayer(o);
+    })
+
+    restartGame.addEventListener("click", () => {
+        window.location.reload();
     })
     
     let boardArray = [];
@@ -148,13 +160,18 @@ const gameBoard = (() => {
     };
 
     const winnerMessage = function (mark) {
-        if (mark === "x" || mark === "o") {
+        if (mark === "x") {
             popupContainer.id = "popupContainer"
             winnerContainer.removeAttribute("id")
+            winner.innerHTML = `${gameFlow.players[0].name}`
+        } else if (mark === "o") {
+            popupContainer.id = "popupContainer"
+            winnerContainer.removeAttribute("id")
+            winner.innerHTML = `${gameFlow.players[1].name}`
         } else {
             popupContainer.id = "popupContainer"
             winnerContainer.removeAttribute("id")
-            winnerContainer.innerHTML = "It's a tie!"
+            winner.innerHTML = "It's a tie!"
         }
     }
 
@@ -269,11 +286,7 @@ const AI = (() => {
     }
 })();
 
-gameFlow.addPlayer(player("player1", "o"));
-gameFlow.addPlayer(player("player2", "x"));
-
 gameBoard.renderBoard();
-
 
 
 
